@@ -1,4 +1,3 @@
-library(sbtools)
 
 download_data <- function(out_filepath = file.path('1_fetch', 'out', 'model_RMSEs.csv')) {
   dir.create(dirname(out_filepath), showWarnings = FALSE)

@@ -3,7 +3,7 @@ source("1_fetch/src/download.R")
 source("2_process/src/load.R")
 source("3_visualize/src/plot.R")
 
-tar_option_set(packages = c("tidyverse", "sbtools", "whisker"))
+tar_option_set(packages = c("tidyverse", "sbtools", "whisker", "dplyr"))
 
 list(
   # Get the data from ScienceBase
@@ -16,6 +16,7 @@ list(
   tar_target(
     eval_data,
     load_RMSE(in_filepath = model_RMSEs_csv),
+    packages = c("readr", "stringr")
   ),
   # Create a plot
   tar_target(

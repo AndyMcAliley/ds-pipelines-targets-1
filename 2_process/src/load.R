@@ -1,8 +1,3 @@
-library(readr)
-library(dplyr)
-library(whisker)
-library(stringr)
-
 load_RMSE <- function(in_filepath = file.path('1_fetch', 'out', 'model_RMSEs.csv')) {
   
   # Prepare the data for plotting
