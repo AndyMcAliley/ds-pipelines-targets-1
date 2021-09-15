@@ -16,8 +16,8 @@ list(
   ),
   # Create a plot
   tar_target(
-    figure_1_png,
-    make_plot(out_filepath = "figure_1.png", data = eval_data), 
+    test_RMSE_png,
+    make_plot(out_filepath = "3_visualize/out/test_RMSE.png", data = eval_data), 
     format = "file"
   ),
   # Save the processed data
