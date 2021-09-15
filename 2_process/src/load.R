@@ -1,13 +1,7 @@
-library(readr)
-library(dplyr)
-library(whisker)
-library(stringr)
-
-load_RMSE <- function(mendota_file = file.path(
-  '1_fetch', 'out', 'model_RMSEs.csv')) {
+load_RMSE <- function(in_filepath = file.path('1_fetch', 'out', 'model_RMSEs.csv')) {
   
   # Prepare the data for plotting
-  eval_data <- readr::read_csv(mendota_file, col_types = 'iccd') %>%
+  eval_data <- readr::read_csv(in_filepath, col_types = 'iccd') %>%
     filter(str_detect(exper_id, 'similar_[0-9]+')) %>%
     mutate(col = case_when(
       model_type == 'pb' ~ '#1b9e77',
@@ -22,13 +16,16 @@ load_RMSE <- function(mendota_file = file.path(
   return(eval_data)
 }
 
-save_RMSE_csv <- function(eval_data, output_dir=file.path('2_process', 'out')){
+save_RMSE_csv <- function(eval_data, 
+                          out_filepath=file.path('2_process', 'out', 'model_summary_results.csv')){
   # Save the processed data
-  dir.create(output_dir, showWarnings = FALSE)
-  readr::write_csv(eval_data, file = file.path(output_dir, 'model_summary_results.csv'))
+  dir.create(dirname(out_filepath), showWarnings = FALSE)
+  readr::write_csv(eval_data, file = out_filepath)
+  return(out_filepath)
 }
 
-save_model_diagnostics <- function(eval_data, output_dir=file.path('2_process', 'out')){
+save_model_diagnostics <- function(eval_data,
+                                   out_filepath=file.path('2_process', 'out', 'model_diagnostic_text.txt')){
   # Save the model diagnostics
   render_data <- list(pgdl_980mean = filter(eval_data, model_type == 'pgdl', exper_id == "similar_980") %>% pull(rmse) %>% mean %>% round(2),
                       dl_980mean = filter(eval_data, model_type == 'dl', exper_id == "similar_980") %>% pull(rmse) %>% mean %>% round(2),
@@ -45,6 +42,7 @@ save_model_diagnostics <- function(eval_data, output_dir=file.path('2_process', 
     ({{dl_500mean}} and {{pb_500mean}}°C, respectively) or more, but worse than PB when training was reduced to 100 profiles ({{dl_100mean}} and {{pb_100mean}}°C respectively) or fewer.
     The PGDL prediction accuracy was more robust compared to PB when only two profiles were provided for training ({{pgdl_2mean}} and {{pb_2mean}}°C, respectively). '
   
-  dir.create(output_dir, showWarnings = FALSE)
-  whisker.render(template_1 %>% str_remove_all('\n') %>% str_replace_all('  ', ' '), render_data ) %>% cat(file = file.path(output_dir, 'model_diagnostic_text.txt'))
+  dir.create(dirname(out_filepath), showWarnings = FALSE)
+  whisker.render(template_1 %>% str_remove_all('\n') %>% str_replace_all('  ', ' '), render_data ) %>% cat(file = out_filepath)
+  return(out_filepath)
 }

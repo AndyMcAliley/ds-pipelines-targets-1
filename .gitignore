@@ -2,7 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-1_fetch/out/*.csv
-2_process/out/*.csv
-2_process/out/*.txt
-3_visualize/out/*.png
+_targets
+1_fetch/out/*
+2_process/out/*
+3_visualize/out/*
